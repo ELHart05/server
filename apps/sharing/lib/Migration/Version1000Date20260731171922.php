@@ -59,6 +59,7 @@ final class Version1000Date20260731171922 extends SimpleMigrationStep {
 			$table->setPrimaryKey(['class_id']);
 			$table->addUniqueIndex(['class_name']);
 		}
+		$classmapTable = $schema->getTable('sharing_classmap');
 
 		$sourcesTable = $schema->getTable('sharing_share_sources');
 		if ($sourcesTable->hasColumn('source_class')) {
@@ -66,7 +67,7 @@ final class Version1000Date20260731171922 extends SimpleMigrationStep {
 			$sourcesTable->addColumn('source_class_id', Types::INTEGER);
 			$sourcesTable->dropPrimaryKey();
 			$sourcesTable->setPrimaryKey(['share_id', 'source_class_id', 'source_value']);
-			$sourcesTable->addForeignKeyConstraint('sharing_classmap', ['source_class_id'], ['class_id']);
+			$sourcesTable->addForeignKeyConstraint($classmapTable->getName(), ['source_class_id'], ['class_id']);
 		}
 
 		$recipientsTable = $schema->getTable('sharing_share_recipients');
@@ -75,7 +76,7 @@ final class Version1000Date20260731171922 extends SimpleMigrationStep {
 			$recipientsTable->addColumn('recipient_class_id', Types::INTEGER);
 			$recipientsTable->dropPrimaryKey();
 			$recipientsTable->setPrimaryKey(['share_id', 'recipient_class_id', 'recipient_value']);
-			$recipientsTable->addForeignKeyConstraint('sharing_classmap', ['recipient_class_id'], ['class_id']);
+			$recipientsTable->addForeignKeyConstraint($classmapTable->getName(), ['recipient_class_id'], ['class_id']);
 		}
 
 		$propertiesTable = $schema->getTable('sharing_share_properties');
@@ -84,7 +85,7 @@ final class Version1000Date20260731171922 extends SimpleMigrationStep {
 			$propertiesTable->addColumn('property_class_id', Types::INTEGER);
 			$propertiesTable->dropPrimaryKey();
 			$propertiesTable->setPrimaryKey(['share_id', 'property_class_id']);
-			$propertiesTable->addForeignKeyConstraint('sharing_classmap', ['property_class_id'], ['class_id']);
+			$propertiesTable->addForeignKeyConstraint($classmapTable->getName(), ['property_class_id'], ['class_id']);
 		}
 
 		$permissionsTable = $schema->getTable('sharing_share_permissions');
@@ -93,7 +94,7 @@ final class Version1000Date20260731171922 extends SimpleMigrationStep {
 			$permissionsTable->addColumn('permission_class_id', Types::INTEGER);
 			$permissionsTable->dropPrimaryKey();
 			$permissionsTable->setPrimaryKey(['share_id', 'permission_class_id']);
-			$permissionsTable->addForeignKeyConstraint('sharing_classmap', ['permission_class_id'], ['class_id']);
+			$permissionsTable->addForeignKeyConstraint($classmapTable->getName(), ['permission_class_id'], ['class_id']);
 		}
 
 		return $schema;
